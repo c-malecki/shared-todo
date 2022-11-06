@@ -24,7 +24,7 @@ interface LoginForm {
 
 const form = reactive<LoginForm>({
   email: "",
-  password: "",
+  password: ""
 });
 
 const submit = (): void => {

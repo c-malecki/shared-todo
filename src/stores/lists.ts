@@ -20,7 +20,7 @@ type List = {
   creatorId: number;
   createdDate: string;
   archived: boolean;
-  items: Array<Todo>;
+  items: Todo[];
 };
 
 interface State {
@@ -44,7 +44,7 @@ export const useListsStore = defineStore("lists", {
           items: []
         },
         <List>{
-          id: 1,
+          id: 2,
           name: "Demo List 2",
           allComplete: false,
           totalItems: 0,
@@ -59,11 +59,11 @@ export const useListsStore = defineStore("lists", {
     };
   },
   getters: {
-    // allTodoItems: (state) => {
-    //   const allTodoItems = [];
-    //   state.lists.forEach((list) => allTodoItems.push(list.items));
-    //   return allTodoItems.flat();
-    // }
+    allTodoItems: (state) => {
+      const allTodoItems: Todo[][] = [];
+      state.lists.forEach((list) => allTodoItems.push(list.items));
+      return allTodoItems.flat();
+    }
     // todosDueToday: (state) => {
     //   const dueToday = [];
     //   state.lists.forEach((list) => {

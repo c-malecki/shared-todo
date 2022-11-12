@@ -1,19 +1,28 @@
 <template>
   <div class="due-today-home">
-    <div
-      class="todo-container"
-      v-for="(item, idx) in store.todosDueToday"
-      :key="`${item.name}${idx}`"
-    >
-      <span>{{ item.name }}</span>
+    <h2>Due Today</h2>
+    <div class="todo-container" v-for="(item, idx) in dueToday" :key="`${item.title}${idx}`">
+      <span>{{ item.title }}</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useListsStore } from "@/stores/lists";
+import axios from "axios";
+import { onBeforeMount, reactive } from "vue";
+import { useAppStore } from "@/stores/app";
+import type { TodosDueToday } from "./TodosDueToday";
 
-const store = useListsStore();
+const store = useAppStore();
+
+const dueToday = reactive<TodosDueToday>([]);
+
+onBeforeMount(() =>
+  axios
+    .get(`/user/${store.user?.id}/todos?dueToday=true`)
+    .then((res) => dueToday.push(...res.data.todos))
+    .catch((err) => console.log(err))
+);
 </script>
 
 <style lang="scss" scoped>

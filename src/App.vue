@@ -1,7 +1,7 @@
 <template>
-  <Head />
+  <Header />
   <div class="main-wrap">
-    <!-- <Nav /> -->
+    <Nav v-if="store.user" />
     <main class="main">
       <RouterView />
     </main>
@@ -10,7 +10,20 @@
 
 <script setup lang="ts">
 import { RouterView } from "vue-router";
-import { Head } from "../src/components/ui/layout/layout-index";
+import { Header, Nav } from "../src/components/ui/layout/layout-index";
+import { setupWorker } from "msw";
+import { onMounted } from "vue";
+import { usersHandler } from "./mocks/handlers/usersHandler.js";
+import { listsHandler } from "./mocks/handlers/listsHandler.js";
+import { todosHandler } from "./mocks/handlers/todosHandler.js";
+import { useAppStore } from "./stores/app";
+
+const store = useAppStore();
+
+if (process.env.NODE_ENV === "development") {
+  const worker = setupWorker(...usersHandler, ...listsHandler, ...todosHandler);
+  onMounted(() => worker.start());
+}
 </script>
 
 <style lang="scss">
@@ -49,6 +62,8 @@ import { Head } from "../src/components/ui/layout/layout-index";
       -ms-flex: 1 0 auto;
       flex: 1 0 auto;
       width: 100%;
+      max-width: 1024px;
+      margin: 0 auto;
     }
   }
 }
